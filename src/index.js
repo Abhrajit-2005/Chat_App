@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('msg_send', async (data) => {
-        // console.log(data);
+        console.log(data);
         const chat = await Chat.create({
             roomId: data.roomid,
             user: data.username,
@@ -27,15 +27,18 @@ io.on('connection', (socket) => {
     });
 
 });
+// const path = require('path');
 
+// Set views directory explicitly
+app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
-app.use('/', express.static(path.join(__dirname, '../public')));
+
 
 app.get('/chat/:roomid', async (req, res) => {
     const chats = await Chat.find({
         roomId: req.params.roomid
     }).select('content user');
-    console.log(chats);
+    // console.log(chats);
     res.render('index', {
         name: 'Abhrajit',
         id: req.params.roomid,

@@ -13,7 +13,6 @@
     <input id="startchat" type="hidden" data-roomid="<%= id %>"></input>
     <input type="text" id="username" placeholder="username...">
     <input type="text" id="newmsg" placeholder="message..">
-    <span id="typing">typing....</span>
     <button id="btn">Send</button>
 
     <ul id="msglist">
@@ -31,12 +30,12 @@
 
         let startchat = document.getElementById('startchat');
 
-        let receiveTypingId = null;
-        let typingId = null;
+        // let receiveTypingId = null;
+        // let typingId = null;
 
         let btn = document.getElementById('btn');
-        let spanTyping = document.getElementById('typing');
-        spanTyping.style.display = 'none';
+        // let spanTyping = document.getElementById('typing');
+        // spanTyping.style.display = 'none';
         let inputMsg = document.getElementById('newmsg');
         let username = document.getElementById('username');
         let msgList = document.getElementById('msglist');
@@ -46,12 +45,24 @@
         });
 
         btn.onclick = function exec() {
+            const user = username.value.trim();
+            const msg = inputMsg.value.trim();
+            const room = startchat.getAttribute('data-roomid');
+
+            if (!user || !msg) {
+                alert("Username and message cannot be empty.");
+                return;
+            }
+
             socket.emit('msg_send', {
-                msg: inputMsg.value,
-                username: username.value,
-                roomid: startchat.getAttribute('data-roomid')
+                msg: msg,
+                username: user,
+                roomid: room
             });
+
+            inputMsg.value = '';
         }
+
 
         socket.on('msg_rcvd', (data) => {
             let limsg = document.createElement('li');
